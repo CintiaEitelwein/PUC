@@ -1,0 +1,196 @@
+"""
+PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ
+CURSO: BIG DATA E INTELIGÊNCIA ANALÍTICA
+Disciplina: Raciocínio Computacional
+aluna: Cintia Eitelwein
+"""
+
+# Bibliotecas
+
+import random
+import time
+
+# Funções
+
+def exibirDados(dados):
+     # Função que recebe uma lista de dados e converte a lista
+     # para uma lista com as respectivas cores do dado
+     # -------------------------------------------------------
+
+     lista_nomes = ""
+
+     for dado in dados:
+          if dado == "CPCTCP":
+               lista_nomes = lista_nomes + "Verde "
+          elif dado == "TCPTCP":
+               lista_nomes = lista_nomes + "Amarelo "
+          else:
+               lista_nomes = lista_nomes + "Vermelho "
+
+     return lista_nomes
+
+def scoreJogador(cerebros, passos, tiros):
+    print("\n Seu Score é:")
+    print("\t{0:<10} {1:<10} {2:<10}\n".format("Cérebros", "Passos", "Tiros"))
+    print("\t{0:<10} {1:<10} {2:<10}\n".format(cerebros, passos, tiros))
+
+def scoreFinal():
+    maiorPontuacao = 0
+    jogadorMaiorPontuacao = 0
+
+    print("\n\n\n")
+    print("<-> (@_@) PONTUAÇÃO FINAL DO JOGO (@_@) <->")
+    print("\t{0:<10} {1:<10}\n".format("JOGADOR", "PONTUAÇÃO"))
+
+    for jogador in range(numJogadores):
+        print("\t{0:<10} {1:<10}".format(listajogadores[jogador], placar[jogador]))
+
+        # Verificar se o jogador teve a maior pontuação
+        # ---------------------------------------------
+        if placar[jogador] > maiorPontuacao:
+            maiorPontuacao = placar[jogador]
+            jogadorMaiorPontuacao = jogador
+
+
+    print(f"\n {listajogadores[jogadorMaiorPontuacao]} é o jogador VENCEDOR! (@_@)")
+
+# Jogadores
+# Insere o número de jogadores, considerando o mínimo de 2 jogadores.
+# ------------------------------------------------------------------
+print("Olá jogadores, sejam bem-vindo ao Zombie Dice! (@_@) ")
+numJogadores = 0
+while numJogadores < 2:
+    numJogadores = int(input("Informe o número de ZOMBIES (@_@) jogadores: "))
+    if (numJogadores <2):
+        print("O número de ZOMBIE jogadores deve ser maior ou igual a 2!\n")
+
+# Solicita o nome dos jogadores conforme o número de jogadores informado
+# ----------------------------------------------------------------------
+listajogadores = []
+for i in range(numJogadores):
+    nome = input("Informe o nome do Zombie (@_@) jogador " + str(i+1)+": ")
+    listajogadores.append(nome)
+
+# Sobre os dados
+# Fase de cada dado e quantidade de dados de cada cor no copo
+# -----------------------------------------------------------
+
+dadoVerde = "CPCTCP"
+dadoAmarelo = "TCPTCP"
+dadoVermelho = "TPTCPT"
+
+listadados = [dadoVerde, dadoVerde, dadoVerde, dadoVerde, dadoVerde, dadoVerde,
+              dadoAmarelo,dadoAmarelo,dadoAmarelo,dadoAmarelo,
+              dadoVermelho, dadoVermelho, dadoVermelho];
+
+# Informações do Jogo
+# -------------------
+placar = []
+
+# Iniciando o Jogo
+# ----------------
+print("\t\t ---> Somente os CÉREBROS contam PONTOS! \n")
+print("\t\t ---> Os PASSOS e os TIROS RETORNAM para o COPO, caso o jogador decida fazer mais um rodada!\n")
+print("\t\t ---> Com 3 TIROS ou mais o jogador é ELIMINADO!\n")
+print("\t\t ---> Caso o COPO tenha MENOS DE 3 DADOS passa para o próximo jogador! \n")
+print("\n\t\t ---> VAMOS COMEÇAR! \n")
+
+time.sleep(7)
+
+# Execução dos turnos dos Jogadores
+# ---------------------------------
+for jogador in listajogadores:
+
+    rodada = 1
+    cerebros = 0
+    passos = 0
+    tiros = 0
+    copoDadosJogador = listadados[:]
+
+    while True:
+        print(f"\n\t\t\t <-> Jogador: {jogador}  <->  RODADA {rodada} <->")
+        time.sleep(2)
+
+        for i in range(3):
+            corDado = ""
+            faceDado = ""
+            tamanhoPoteDados = len(copoDadosJogador)
+
+            # ETAPA 1: Sortear o dado
+            # -------------------------
+            dadoSorteado = random.choice(range(tamanhoPoteDados))
+            valorDado = copoDadosJogador[dadoSorteado]
+
+            # ETAPA 2: Verifica cor dado Sorteado
+            # ------------------------------------
+            if valorDado == "TCPTCP":
+                 corDado = "Dado Amarelo"
+            elif valorDado == "CPCTCP":
+                 corDado = "Dado Verde"
+            else:
+                 corDado = "Dado Vermelho"
+
+            # ETAPA 3: Sortear uma face do dado
+            # -------------------------------
+            qntFacesDado = len(valorDado)
+            faceSorteada = random.choice(range(qntFacesDado))
+
+            # ETAPA 4: Verifica face dado Sorteado e
+            #           remove dado do pote caso seja:
+            #           Cérebro ou Tiro
+            # -----------------------------------------
+            if valorDado[faceSorteada] == "C":
+                 faceDado = "Cérebro"
+                 cerebros = cerebros + 1
+                 copoDadosJogador.pop(dadoSorteado)
+            elif valorDado[faceSorteada] == "P":
+                 faceDado = "Passos"
+                 passos = passos + 1
+            elif valorDado[faceSorteada] == "T":
+                 faceDado = "Tiros"
+                 tiros = tiros + 1
+                 copoDadosJogador.pop(dadoSorteado)
+
+            # ETAPA 5: Exibir dado sorteado
+            # -------------------------------
+            print(f"Dado {i + 1}: {corDado} <> Face: {faceDado}")
+
+        # ETAPA 6: Exibir pontuação do Jogador
+        # --------------------------------
+        scoreJogador(cerebros, passos, tiros)
+        rodada = rodada + 1
+
+        # ETAPA 7: Exibir dados restantes no pote
+        #          Não permite continuar quando no pote tiver menos de 3 dados
+        # ---------------------------------------
+        print("\nQuantidade de dados no copo para a próxima rodada são:")
+        print("\t", len(copoDadosJogador))
+        print("Os dados no copo para próxima rodada são:")
+        print("\t",exibirDados(copoDadosJogador), "\n")
+        if len(copoDadosJogador) <= 3:
+            print("\t\t <-> Não há dados suficientes no copo para mais uma rodada! <-> ")
+            break
+
+        # ETAPA 8: Verifica se o jogador foi eliminado
+        #          Zera a pontuação do jogador
+        # ---------------------------------------------
+        if tiros >= 3:
+            print("\t\t <-> Você recebeu 3 tiros, você foi ELIMINADO! (x_x) <-> \n")
+            cerebros = 0
+            placar.append(0)
+            time.sleep(4)
+            break
+
+        # ETAPA 9: Verifica se o jogador Deseja continuar jogando
+        #          Caso "n" adiciona a quantidade de cerebros no placar
+        # --------------------------------------------------------------
+        opcao = input("<-> Deseja continuar jogando os dados(s/n)? <-> ")
+        if opcao == "n":
+            turnoFinalizado = True
+            placar.append(cerebros)
+            time.sleep(2)
+            break
+
+# ETAPA 10: Exibir pontuação final do jogo
+# -------------------------------------
+scoreFinal()
